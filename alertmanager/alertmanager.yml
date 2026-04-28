@@ -1,13 +1,15 @@
 route:
-  group_by: ['alertname']
+  group_by: ['alertname', 'severity']
   group_wait: 10s
   group_interval: 10s
-  repeat_interval: 1h
+  repeat_interval: 4h
   receiver: 'telegram'
 
 receivers:
   - name: 'telegram'
     telegram_configs:
-      - bot_token: 'YOUR_BOT_TOKEN'
-        chat_id: YOUR_CHAT_ID
+      - bot_token: '8668923753:AAGRvjsMiXA2Trj6mHRok74kvy2sw1lr8dQ'
+        chat_id: 1361224740
         api_url: 'https://api.telegram.org'
+        parse_mode: 'HTML'
+        disable_notifications: false
