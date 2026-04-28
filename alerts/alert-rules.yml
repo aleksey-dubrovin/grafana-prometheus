@@ -1,0 +1,43 @@
+groups:
+  - name: node_alerts
+    interval: 30s
+    rules:
+      # CPU Usage > 80% в течение 5 минут
+      - alert: HighCPUUsage
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 80% (current: {{ $value }}%) for more than 5 minutes."
+
+      # Load Average 1min > количество CPU * 0.7
+      - alert: HighLoadAverage
+        expr: node_load1 > count(node_cpu_seconds_total{mode="idle"}) without(cpu, mode) * 0.7
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High load average on {{ $labels.instance }}"
+          description: "Load average is above 70% of CPU cores (current: {{ $value }})"
+
+      # Free memory < 512MB
+      - alert: LowMemory
+        expr: node_memory_MemFree_bytes < 512 * 1024 * 1024
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low memory on {{ $labels.instance }}"
+          description: "Free memory is below 512MB (current: {{ $value | humanize1024 }})"
+
+      # Free disk space on root < 10%
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{mountpoint="/", fstype!="tmpfs"} / node_filesystem_size_bytes{mountpoint="/", fstype!="tmpfs"}) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Root filesystem has less than 10% free space (current: {{ $value | humanizePercentage }})"
