@@ -49,23 +49,6 @@ receivers:
         chat_id: YOUR_CHAT_ID
 ```
 
-## Структура репозитория
-
-```
-monitoring/
-├── docker-compose.yml
-├── prometheus/
-│   └── prometheus.yml
-├── alerts/
-│   └── alert-rules.yml
-├── alertmanager/
-│   └── alertmanager.yml
-└── grafana/
-    └── provisioning/
-        └── datasources/
-            └── datasource.yml
-```
-
 ## Команды управления
 
 ```bash
